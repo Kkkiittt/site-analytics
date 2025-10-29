@@ -1,0 +1,6 @@
+@Analite.Api_HostAddress = http://localhost:5056
+
+GET {{Analite.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
