@@ -7,6 +7,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analite.Api", "Analite.Api\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analite.Domain", "Analite.Domain\Analite.Domain.csproj", "{D51A435B-0197-4032-B8CB-CAA0C7D6656A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analite.Application", "Analite.Application\Analite.Application.csproj", "{76CA5967-4273-43DC-B52A-FA2CD0FD9EDE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
+	ProjectSection(SolutionItems) = preProject
+		task.txt = task.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +28,10 @@ Global
 		{D51A435B-0197-4032-B8CB-CAA0C7D6656A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D51A435B-0197-4032-B8CB-CAA0C7D6656A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D51A435B-0197-4032-B8CB-CAA0C7D6656A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76CA5967-4273-43DC-B52A-FA2CD0FD9EDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76CA5967-4273-43DC-B52A-FA2CD0FD9EDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76CA5967-4273-43DC-B52A-FA2CD0FD9EDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76CA5967-4273-43DC-B52A-FA2CD0FD9EDE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
