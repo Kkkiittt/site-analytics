@@ -8,4 +8,6 @@ public class Block
 
 	public long PageId { get; set; }
 	public Page Page { get; set; } = null!;
+
+	public Guid CustomerId{ get; set; } //for faster searching block by name and apiKey
 }
