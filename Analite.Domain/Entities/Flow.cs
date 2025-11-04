@@ -2,7 +2,7 @@
 
 public class Flow
 {
-	public long Id { get; set; }
+	public string SessionId { get; set; } = string.Empty;
 	public DateTime StartAt { get; set; }
 	public DateTime EndAt { get; set; }
 
