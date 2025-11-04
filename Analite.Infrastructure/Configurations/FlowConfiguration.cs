@@ -9,7 +9,7 @@ public class FlowConfiguration : IEntityTypeConfiguration<Flow>
 {
 	public void Configure(EntityTypeBuilder<Flow> builder)
 	{
-		builder.HasKey(f => f.Id);
+		builder.HasKey(f => f.SessionId);
 		builder.HasIndex(f => new { f.CustomerId, f.StartAt, f.EndAt });
 	}
 }
