@@ -12,7 +12,5 @@ public interface IBlockService
 
     Task<BlockGetDto?> GetByIdAsync(long id);
     Task<IEnumerable<BlockGetDto>> GetAllAsync(long pageId);
-
-    Task<int> GetHoversCountAsync(long blockId);
-    Task<int> GetClicksCountAsync(long blockId);
+    
 }
