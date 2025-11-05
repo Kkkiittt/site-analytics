@@ -1,16 +1,17 @@
 using Analite.Application.Dtos.Create;
+using Analite.Application.Dtos.Get;
 using Analite.Domain.Entities;
 
 namespace Analite.Application.Interfaces;
 
 public interface IPageService
 {
-    Task<Page> CreatePageAsync(PageCreateDto pageCreateDto);
-    Task<Page> UpdatePageAsync(long id , PageCreateDto pageCreateDto);
-    Task<Page> DeletePageAsync(long id);
+    Task<PageGetDto> CreatePageAsync(PageCreateDto pageCreateDto);
+    Task<PageGetDto> UpdatePageAsync(long id , PageCreateDto pageCreateDto);
+    Task<PageGetDto> DeletePageAsync(long id);
     
-    Task<Page?> GetByIdAsync(long id);
-    Task<IEnumerable<Page>> GetAllAsync(Guid customerId);
+    Task<PageGetDto?> GetByIdAsync(long id);
+    Task<IEnumerable<PageGetDto>> GetAllAsync(Guid customerId);
     
     Task<int> GetVisitsCountsAsync(long pageId);
     Task<int> GetUniqueUsersCountsAsync(long pageId);
