@@ -1,16 +1,14 @@
 using Analite.Application.Dtos.Create;
 using Analite.Application.Dtos.Get;
-using Analite.Domain.Entities;
 
 namespace Analite.Application.Interfaces;
 
 public interface IBlockService
 {
-    Task<BlockGetDto> CreateBlockAsync(BlockCreateDto blockCreateDto);
-    Task<BlockGetDto> UpdateBlockAsync(long id , BlockCreateDto blockCreateDto);
-    Task<BlockGetDto> DeleteBlockAsync(long id);
+	Task<BlockGetDto> CreateBlockAsync(BlockCreateDto blockCreateDto);
+	Task<BlockGetDto> UpdateBlockAsync(long id, BlockCreateDto blockCreateDto);
+	Task DeleteBlockAsync(long id);
 
-    Task<BlockGetDto?> GetByIdAsync(long id);
-    Task<IEnumerable<BlockGetDto>> GetAllAsync(long pageId);
-    
+	Task<BlockGetDto?> GetByIdAsync(long id);
+	Task<IEnumerable<BlockGetDto>> GetByPageAsync(long pageId);
 }
