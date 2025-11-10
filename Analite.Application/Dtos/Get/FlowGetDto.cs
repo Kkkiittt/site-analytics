@@ -2,7 +2,7 @@
 
 public class FlowGetDto
 {
-	public long Id { get; set; }
+	public string Id { get; set; } = string.Empty;
 	public DateTime StartAt { get; set; }
 	public DateTime EndAt { get; set; }
 

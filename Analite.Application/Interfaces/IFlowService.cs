@@ -1,10 +1,14 @@
-﻿namespace Analite.Application.Interfaces;
+﻿using Analite.Application.Dtos;
+using Analite.Application.Dtos.Get;
+using Analite.Application.Dtos.Results;
+
+namespace Analite.Application.Interfaces;
 
 public interface IFlowService
 {
-	//todo: 
-	
-	//get shortest, longest, average and median flow length & time in given period
+	Task<FlowSummaryDto> GetFlowSummaryAsync(Guid customerId, DateTime from, DateTime to, SummaryType type);
 
-	//get paginated n flows with filters by length & time
+	Task<IEnumerable<FlowGetDto>> GetFlowsAsync(Guid customerId, DateTime from, DateTime to, PaginationData pagination);
+
+	Task<IEnumerable<FlowGetDto>> GetFlowsInCacheAsync(Guid customerId, int limit);
 }

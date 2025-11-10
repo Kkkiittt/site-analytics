@@ -1,6 +1,6 @@
-﻿namespace Analite.Application.Dtos.Get;
+﻿namespace Analite.Application.Dtos.Results;
 
-public class HeatmapGetDto
+public class HeatmapDto
 {
 	public DateTime From { get; set; }
 	public DateTime To { get; set; }

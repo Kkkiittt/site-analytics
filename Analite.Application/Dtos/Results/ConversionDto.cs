@@ -1,6 +1,6 @@
-﻿namespace Analite.Application.Dtos.Get;
+﻿namespace Analite.Application.Dtos.Results;
 
-public class ConversionGetDto
+public class ConversionDto
 {
 	public DateTime From { get; set; }
 	public DateTime To { get; set; }
