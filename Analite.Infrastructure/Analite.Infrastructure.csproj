@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Analite.Application\Analite.Application.csproj" />
+    <ProjectReference Include="..\Analite.Domain\Analite.Domain.csproj" />
   </ItemGroup>
 
 </Project>

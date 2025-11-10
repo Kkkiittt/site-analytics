@@ -7,11 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Implementations\" />
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Analite.Domain\Analite.Domain.csproj" />
+    <ProjectReference Include="..\Analite.Infrastructure\Analite.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
