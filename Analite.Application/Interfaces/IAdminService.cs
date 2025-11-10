@@ -10,7 +10,7 @@ public interface IAdminService
 	Task UnblockCustomerAsync(Guid customerId);
 
 	Task<ManyDto<CustomerGetFullDto>> GetAllCustomersAsync(PaginationData pagination);
-	Task<CustomerGetFullDto> GetByIdAsync(Guid customerId);
+	Task<CustomerGetFullDto?> GetByIdAsync(Guid customerId);
 
 	Task PromoteCustomerAsync(Guid customerId);
 }
