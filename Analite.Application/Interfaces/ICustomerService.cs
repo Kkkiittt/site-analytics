@@ -6,8 +6,8 @@ namespace Analite.Application.Interfaces;
 public interface ICustomerService
 {
 	Task<CustomerGetDto> RegisterCustomerAsync(CustomerCreateDto customerCreateDto);
-	Task<string> LoginCustomerAsync(string email, string password);
-	Task<CustomerGetDto> GetById(Guid customerId);
+	Task<string?> LoginCustomerAsync(string email, string password);
+	Task<CustomerGetDto?> GetById(Guid customerId);
 
 
 	Task UpdateCustomerAsync(Guid customerId, CustomerCreateDto customerCreateDto);
