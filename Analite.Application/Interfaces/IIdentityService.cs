@@ -8,4 +8,5 @@ public interface IIdentityService
 	public Roles Role{ get; }
 	public bool IsAdmin{ get; }
 	public bool IsApproved{ get; }
+	public string SecurityStamp{ get; }
 }
