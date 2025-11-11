@@ -1,11 +1,14 @@
 using Analite.Application.Dtos.Create;
 using Analite.Application.Interfaces;
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Analite.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class CustomersController : Controller
 {
     private readonly ICustomerService _customerService;
@@ -15,6 +18,7 @@ public class CustomersController : Controller
     }
 
     [HttpPost("register")]
+    [AllowAnonymous]
     public async Task<IActionResult> Register([FromBody] CustomerCreateDto customerCreateDto)
     {
         var customer = await _customerService.RegisterCustomerAsync(customerCreateDto);
@@ -22,27 +26,24 @@ public class CustomersController : Controller
     }
 
     [HttpPost("login")]
+    [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
     {
         var login = await _customerService.LoginCustomerAsync(loginDto.Email, loginDto.Password);
-        if  (login == null)
-            return BadRequest();
         return Ok(login);
     }
     
-    [HttpPut("customer_update/{id:guid}")]
+    [HttpPut("{id:guid}")]
     public async Task<IActionResult> Update(Guid id, [FromBody] CustomerCreateDto customerCreateDto)
     {
         await _customerService.UpdateCustomerAsync(id, customerCreateDto);
         return Ok();
     }
     
-    [HttpGet("customer_getById/{id:guid}")]
+    [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id)
     {
         var customer = await _customerService.GetById(id);
-        if (customer == null)
-            return NotFound();
 
         return Ok(customer);
     }
@@ -61,7 +62,7 @@ public class CustomersController : Controller
         return Ok(result);
     }
 
-    [HttpPost("{id:guid}/reset-key")]
+    [HttpPost("reset-key/{id:guid}")]
     public async Task<IActionResult> ResetKey(Guid id)
     {
         await _customerService.ResetPublicKey(id);

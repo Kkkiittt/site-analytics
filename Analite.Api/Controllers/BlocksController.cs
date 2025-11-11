@@ -1,11 +1,14 @@
 using Analite.Application.Dtos.Create;
 using Analite.Application.Interfaces;
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Analite.Api.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("blocks/")]
+[Authorize]
 public class BlocksController : Controller
 {
     private readonly IBlockService _blockService;
@@ -21,31 +24,29 @@ public class BlocksController : Controller
         return Ok(block);
     }
 
-    [HttpPut("block_update/{id:long}")]
+    [HttpPut("{id:long}")]
     public async Task<IActionResult> UpdateBlockAsync(long id, [FromBody] BlockCreateDto blockCreateDto)
     {
         var block = await _blockService.UpdateBlockAsync(id, blockCreateDto);
         return Ok(block);
     }
     
-    [HttpPut("block_delete/{id:long}")]
+    [HttpDelete("{id:long}")]
     public async Task<IActionResult> DeleteBlockAsync(long id)
     {
         await _blockService.DeleteBlockAsync(id);
         return NoContent();
     }
 
-    [HttpGet("block/{id:long}")]
+    [HttpGet("{id:long}")]
     public async Task<IActionResult> GetByIdAsync(long id)
     {
         var block = await _blockService.GetByIdAsync(id);
-        if (block == null)
-            return NotFound();
         
         return Ok(block);
     }
 
-    [HttpGet("block_paged/{pageId:long}")]
+    [HttpGet("page/{pageId:long}")]
     public async Task<IActionResult> GetByPageAsync(long pageId)
     {
         var blocks = await _blockService.GetByPageAsync(pageId);

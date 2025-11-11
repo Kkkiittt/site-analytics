@@ -1,12 +1,15 @@
 using Analite.Application.Dtos;
 using Analite.Application.Dtos.Results;
 using Analite.Application.Interfaces;
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Analite.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class FlowsController : Controller
 {
     private readonly IFlowService _flowService;
@@ -16,7 +19,7 @@ public class FlowsController : Controller
         _flowService = flowService;
     }
     
-    [HttpGet("summary/{customerId:guid}")]
+    [HttpGet("{customerId:guid}/summary")]
     public async Task<IActionResult> GetFlowSummary(Guid customerId, [FromQuery] DateTime from, [FromQuery] DateTime to, [FromQuery] SummaryType type)
     {
         var summary = await _flowService.GetFlowSummaryAsync(customerId, from, to, type);

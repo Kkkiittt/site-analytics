@@ -1,11 +1,14 @@
 using Analite.Application.Dtos.Create;
 using Analite.Application.Interfaces;
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Analite.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class PagesController : Controller
 {
     private readonly IPageService _pageService;
@@ -15,33 +18,31 @@ public class PagesController : Controller
         _pageService = pageService;
     }
     
-    [HttpPost("page_create")]
+    [HttpPost]
     public async Task<IActionResult> Create([FromBody] PageCreateDto pageCreateDto)
     {
         var page = await _pageService.CreatePageAsync(pageCreateDto);
         return Ok(page);
     }
 
-    [HttpPut("page_update/{id:long}")]
+    [HttpPut("{id:long}")]
     public async Task<IActionResult> Update(long id, [FromBody] PageCreateDto pageCreateDto)
     {
         var result = await _pageService.UpdatePageAsync(id, pageCreateDto);
         return Ok(result);
     }
 
-    [HttpDelete("page_delete/{id:long}")]
+    [HttpDelete("{id:long}")]
     public async Task<IActionResult> Delete(long id)
     {
         await _pageService.DeletePageAsync(id);
         return NoContent();
     }
 
-    [HttpGet("page_byId{id:long}")]
+    [HttpGet("{id:long}")]
     public async Task<IActionResult> GetById(long id)
     {
         var page = await _pageService.GetByIdAsync(id);
-        if (page == null)
-            return NotFound();
 
         return Ok(page);
     }
@@ -60,7 +61,7 @@ public class PagesController : Controller
         return Ok(new { PageId = pageId, Visits = count });
     }
 
-    [HttpGet("{pageId:long}/unique_users")]
+    [HttpGet("{pageId:long}/users-unique")]
     public async Task<IActionResult> GetUniqueUsers(long pageId)
     {
         var count = await _pageService.GetUniqueUsersCountsAsync(pageId);

@@ -8,7 +8,7 @@ public interface IFlowService
 {
 	Task<FlowSummaryDto> GetFlowSummaryAsync(Guid customerId, DateTime from, DateTime to, SummaryType type);
 
-	Task<IEnumerable<FlowGetDto>> GetFlowsAsync(Guid customerId, DateTime from, DateTime to, PaginationData pagination);
+	Task<ManyDto<FlowGetDto>> GetFlowsAsync(Guid customerId, DateTime from, DateTime to, PaginationData pagination);
 
 	Task<IEnumerable<FlowGetDto>> GetFlowsInCacheAsync(Guid customerId, int limit);
 }
