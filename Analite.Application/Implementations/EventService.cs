@@ -37,7 +37,8 @@ public class EventService : IEventService
 			SessionId = dto.SessionId,
 			BlockId = block.Id,
 			CustomerId = customer.Id,
-			OccuredAt = dto.OccuredAt
+			OccuredAt = dto.OccuredAt,
+			PageId = block.PageId,
 		};
 		_db.Events.Add(entity);
 		await _db.SaveChangesAsync();

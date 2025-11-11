@@ -6,5 +6,6 @@ public class Event
 	public DateTime OccuredAt { get; set; }
 	
 	public long BlockId{ get; set; }
+	public long PageId{ get; set; }
 	public Guid CustomerId{ get; set; }
 }
