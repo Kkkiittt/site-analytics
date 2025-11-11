@@ -12,32 +12,39 @@ namespace Analite.Api.Controllers;
 [Authorize]
 public class FlowsController : Controller
 {
-    private readonly IFlowService _flowService;
+	private readonly IFlowService _flowService;
 
-    public FlowsController(IFlowService flowService)
-    {
-        _flowService = flowService;
-    }
-    
-    [HttpGet("{customerId:guid}/summary")]
-    public async Task<IActionResult> GetFlowSummary(Guid customerId, [FromQuery] DateTime from, [FromQuery] DateTime to, [FromQuery] SummaryType type)
-    {
-        var summary = await _flowService.GetFlowSummaryAsync(customerId, from, to, type);
-        return Ok(summary);
-    }
+	public FlowsController(IFlowService flowService)
+	{
+		_flowService = flowService;
+	}
 
-    [HttpGet("{customerId:guid}")]
-    public async Task<IActionResult> GetFlows(Guid customerId, [FromQuery] DateTime from, [FromQuery] DateTime to, [FromQuery] int page = 1, [FromQuery] int pageSize = 20)
-    {
-        var pagination = new PaginationData { Page = page, PageSize = pageSize };
-        var flows = await _flowService.GetFlowsAsync(customerId, from, to, pagination);
-        return Ok(flows);
-    }
+	[HttpGet("{customerId:guid}/summary-length")]
+	public async Task<IActionResult> GetFlowSummaryByLength(Guid customerId, [FromQuery] DateTime? from = null, [FromQuery] DateTime? to = null)
+	{
+		var summary = await _flowService.GetFlowSummaryAsync(customerId, from, to, SummaryType.ByLength);
+		return Ok(summary);
+	}
 
-    [HttpGet("{customerId:guid}/cache")]
-    public async Task<IActionResult> GetCachedFlows(Guid customerId, [FromQuery] int limit = 10)
-    {
-        var cached = await _flowService.GetFlowsInCacheAsync(customerId, limit);
-        return Ok(cached);
-    }
+	[HttpGet("{customerId:guid}/summary-time")]
+	public async Task<IActionResult> GetFlowSummaryByTime(Guid customerId, [FromQuery] DateTime? from = null, [FromQuery] DateTime? to = null)
+	{
+		var summary = await _flowService.GetFlowSummaryAsync(customerId, from, to, SummaryType.ByTime);
+		return Ok(summary);
+	}
+
+	[HttpGet("{customerId:guid}")]
+	public async Task<IActionResult> GetFlows(Guid customerId, [FromQuery] DateTime? from = null, [FromQuery] DateTime? to = null, [FromQuery] int page = 1, [FromQuery] int pageSize = 20)
+	{
+		var pagination = new PaginationData { Page = page, PageSize = pageSize };
+		var flows = await _flowService.GetFlowsAsync(customerId, from, to, pagination);
+		return Ok(flows);
+	}
+
+	[HttpGet("{customerId:guid}/cache")]
+	public async Task<IActionResult> GetCachedFlows(Guid customerId, [FromQuery] int limit = 10)
+	{
+		var cached = await _flowService.GetFlowsInCacheAsync(customerId, limit);
+		return Ok(cached);
+	}
 }

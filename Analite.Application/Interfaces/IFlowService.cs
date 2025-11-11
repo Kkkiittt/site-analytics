@@ -6,7 +6,9 @@ namespace Analite.Application.Interfaces;
 
 public interface IFlowService
 {
-	Task<FlowSummaryDto> GetFlowSummaryAsync(Guid customerId, DateTime? from, DateTime? to, SummaryType type);
+	Task<FlowSummaryLengthDto> GetFlowSummaryByLengthAsync(Guid customerId, DateTime? from, DateTime? to);
+
+	Task<FlowSummaryLengthDto> GetFlowSummaryByDurationAsync(Guid customerId, DateTime? from, DateTime? to);
 
 	Task<ManyDto<FlowGetDto>> GetFlowsAsync(Guid customerId, DateTime? from, DateTime? to, PaginationData pagination);
 

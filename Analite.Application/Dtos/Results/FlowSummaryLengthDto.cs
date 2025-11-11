@@ -1,14 +1,8 @@
 ﻿namespace Analite.Application.Dtos.Results;
 
-public class FlowSummaryDto
+public class FlowSummaryLengthDto
 {
 	public FlowShortDto Minimum { get; set; } = new FlowShortDto();
 	public FlowShortDto Maximum { get; set; } = new FlowShortDto();
-	public FlowShortDto Average { get; set; } = new FlowShortDto();
-}
-
-public enum SummaryType
-{
-	ByLength,
-	ByTime
+	public float AverageLength { get; set; }
 }

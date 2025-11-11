@@ -7,6 +7,7 @@ public class Flow
 	public DateTime EndAt { get; set; }
 
 	public List<long> BlockIds { get; set; } = new();
+	public List<long> PageIds { get; set; } = new();
 
 	public Guid CustomerId { get; set; }
 	public Customer Customer { get; set; } = null!;

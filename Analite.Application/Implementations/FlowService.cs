@@ -3,6 +3,7 @@ using Analite.Application.Dtos;
 using Analite.Application.Dtos.Get;
 using Analite.Application.Dtos.Results;
 using Analite.Application.Interfaces;
+using Analite.Domain.Exceptions;
 using Analite.Infrastructure.EFCore;
 
 using Microsoft.EntityFrameworkCore;
@@ -40,6 +41,7 @@ public class FlowService : IFlowService
 				{
 					StartAt = f.StartAt,
 					Blocks = f.BlockIds,
+					Pages = f.PageIds,
 					EndAt = f.EndAt,
 					Id = f.SessionId.ToString(),
 				}
@@ -55,9 +57,10 @@ public class FlowService : IFlowService
 				PageName = b.Page.Name
 			})
 			.ToDictionaryAsync(b => b.Id, b => b);
-		var pages = blocks.Values
-			.GroupBy(b => b.PageId)
-			.ToDictionary(g => g.Key, g => g.First().PageName);
+		var pageIds = res.SelectMany(r => r.Pages).Distinct().ToList();
+		var pages = await _db.Pages
+			.Where(p => pageIds.Contains(p.Id))
+			.ToDictionaryAsync(p => p.Id, p => p.Name);
 		var items = res.Select(r => new FlowGetDto()
 		{
 			StartAt = r.StartAt,
@@ -68,10 +71,7 @@ public class FlowService : IFlowService
 				Id = bid.ToString(),
 				Name = blocks.ContainsKey(bid) ? blocks[bid].Name : "Unknown",
 			}).ToList(),
-			Pages = r.Blocks.Where(bid => blocks.ContainsKey(bid))
-			.Select(bid => blocks[bid].PageId)
-			.Distinct()
-			.Select(pid => new ShortDto()
+			Pages = r.Pages.Select(pid => new ShortDto()
 			{
 				Id = pid.ToString(),
 				Name = pages.ContainsKey(pid) ? pages[pid] : "Unknown",
@@ -91,8 +91,71 @@ public class FlowService : IFlowService
 		throw new NotImplementedException();
 	}
 
-	public Task<FlowSummaryDto> GetFlowSummaryAsync(Guid customerId, DateTime? from, DateTime? to, SummaryType type)
+	public async Task<FlowSummaryLengthDto> GetFlowSummaryByLengthAsync(Guid customerId, DateTime? from, DateTime? to)
 	{
-		throw new NotImplementedException();
+		var query = _db.Flows.Where(f => f.CustomerId == customerId);
+		if(from.HasValue)
+		{
+			query = query.Where(f => f.StartAt >= from.Value);
+		}
+		if(to.HasValue)
+		{
+			query = query.Where(f => f.EndAt <= to.Value);
+		}
+		var min = await query.OrderBy(f => f.PageIds.Count).Select(f => new FlowShortDto()
+		{
+			SessionId = f.SessionId.ToString(),
+			PageCount = f.PageIds.Count,
+			From = f.StartAt,
+			To = f.EndAt,
+		}).FirstOrDefaultAsync();
+		var max = await query.OrderByDescending(f => f.PageIds.Count).Select(f => new FlowShortDto()
+		{
+			SessionId = f.SessionId.ToString(),
+			PageCount = f.PageIds.Count,
+			From = f.StartAt,
+			To = f.EndAt,
+		}).FirstOrDefaultAsync();
+		var average = await query.AverageAsync(f => f.PageIds.Count);
+		return new FlowSummaryLengthDto()
+		{
+			Minimum = min ?? throw new NotFoundException("Flows in given range"),
+			Maximum = max ?? throw new NotFoundException("Flows in given range"),
+			AverageLength = (float)average,
+		};
+	}
+
+	public async Task<FlowSummaryDurationDto> GetFlowSummaryByDurationAsync(Guid customerId, DateTime? from, DateTime? to)
+	{
+		var query = _db.Flows.Where(f => f.CustomerId == customerId);
+		if(from.HasValue)
+		{
+			query = query.Where(f => f.StartAt >= from.Value);
+		}
+		if(to.HasValue)
+		{
+			query = query.Where(f => f.EndAt <= to.Value);
+		}
+		var min = await query.OrderBy(f => f.EndAt - f.StartAt).Select(f => new FlowShortDto()
+		{
+			SessionId = f.SessionId.ToString(),
+			PageCount = f.PageIds.Count,
+			From = f.StartAt,
+			To = f.EndAt,
+		}).FirstOrDefaultAsync();
+		var max = await query.OrderByDescending(f => f.EndAt - f.StartAt).Select(f => new FlowShortDto()
+		{
+			SessionId = f.SessionId.ToString(),
+			PageCount = f.PageIds.Count,
+			From = f.StartAt,
+			To = f.EndAt,
+		}).FirstOrDefaultAsync();
+		var average = await query.AverageAsync(f => (f.EndAt - f.StartAt).Ticks);
+		return new FlowSummaryDurationDto()
+		{
+			Minimum = min ?? throw new NotFoundException("Flows in given range"),
+			Maximum = max ?? throw new NotFoundException("Flows in given range"),
+			AverageDuration = TimeSpan.FromTicks((long)average),
+		};
 	}
 }
