@@ -2,6 +2,7 @@
 
 using Analite.Application.Interfaces;
 using Analite.Domain.Entities;
+using Analite.Domain.Exceptions;
 
 namespace Analite.Api.Services;
 
@@ -19,7 +20,7 @@ public class IdentityService : IIdentityService
 		get
 		{
 			return Guid.Parse(_acc.HttpContext?.User.Claims
-				.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? throw new Exception("No id in token"));
+				.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? throw new UnauthorizedException("Id in token"));
 		}
 	}
 
@@ -28,7 +29,7 @@ public class IdentityService : IIdentityService
 		get
 		{
 			string roleStr = _acc.HttpContext?.User.Claims
-				.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value ?? throw new Exception("No role in token");
+				.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value ?? throw new UnauthorizedException("Role in token");
 			return Enum.Parse<Roles>(roleStr);
 		}
 	}
@@ -46,7 +47,7 @@ public class IdentityService : IIdentityService
 		get
 		{
 			string approvedStr = _acc.HttpContext?.User.Claims
-				.FirstOrDefault(c => c.Type == "Approved")?.Value ?? throw new Exception("No Approved in token");
+				.FirstOrDefault(c => c.Type == "Approved")?.Value ?? throw new UnauthorizedException("Approvedness in token");
 			return bool.Parse(approvedStr);
 		}
 	}
@@ -56,7 +57,7 @@ public class IdentityService : IIdentityService
 		get
 		{
 			return _acc.HttpContext?.User.Claims
-				.FirstOrDefault(c => c.Type == ClaimTypes.Sid)?.Value ?? throw new Exception("No SecurityStamp in token");
+				.FirstOrDefault(c => c.Type == ClaimTypes.Sid)?.Value ?? throw new UnauthorizedException("SecurityStamp in token");
 		}
 	}
 }

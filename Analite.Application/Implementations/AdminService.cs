@@ -3,6 +3,7 @@ using Analite.Application.Dtos;
 using Analite.Application.Dtos.Get;
 using Analite.Application.Interfaces;
 using Analite.Domain.Entities;
+using Analite.Domain.Exceptions;
 using Analite.Infrastructure.EFCore;
 
 using Microsoft.EntityFrameworkCore;
@@ -21,14 +22,14 @@ public class AdminService : IAdminService
 
 	public async Task ApproveCustomerAsync(Guid customerId)
 	{
-		Customer entity = await _db.Customers.FindAsync(customerId) ?? throw new InvalidOperationException("Customer not found");
+		Customer entity = await _db.Customers.FindAsync(customerId) ?? throw new NotFoundException("Customer");
 		entity.IsApproved = true;
 		await _db.SaveChangesAsync();
 	}
 
 	public async Task BlockCustomerAsync(Guid customerId)
 	{
-		Customer entity = await _db.Customers.FindAsync(customerId) ?? throw new InvalidOperationException("Customer not found");
+		Customer entity = await _db.Customers.FindAsync(customerId) ?? throw new NotFoundException("Customer");
 		if(entity.Role == Roles.Admin && _id.Role != Roles.SuperAdmin)
 			throw new InvalidOperationException("Cannot block an admin");
 		entity.IsActive = false;
@@ -65,7 +66,7 @@ public class AdminService : IAdminService
 
 	public async Task<CustomerGetFullDto> GetByIdAsync(Guid customerId)
 	{
-		Customer entity = await _db.Customers.FindAsync(customerId) ?? throw new Exception("Customer not found");
+		Customer entity = await _db.Customers.FindAsync(customerId) ?? throw new NotFoundException("Customer");
 		return new CustomerGetFullDto
 		{
 			Id = entity.Id,
@@ -84,14 +85,14 @@ public class AdminService : IAdminService
 
 	public async Task PromoteCustomerAsync(Guid customerId)
 	{
-		Customer entity = await _db.Customers.FindAsync(customerId) ?? throw new InvalidOperationException("Customer not found");
+		Customer entity = await _db.Customers.FindAsync(customerId) ?? throw new NotFoundException("Customer");
 		entity.Role = Roles.Admin;
 		await _db.SaveChangesAsync();
 	}
 
 	public async Task UnblockCustomerAsync(Guid customerId)
 	{
-		Customer entity = await _db.Customers.FindAsync(customerId) ?? throw new InvalidOperationException("Customer not found");
+		Customer entity = await _db.Customers.FindAsync(customerId) ?? throw new NotFoundException("Customer");
 		entity.IsActive = true;
 		await _db.SaveChangesAsync();
 	}

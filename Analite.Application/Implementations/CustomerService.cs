@@ -3,6 +3,7 @@ using Analite.Application.Dtos.Create;
 using Analite.Application.Dtos.Get;
 using Analite.Application.Interfaces;
 using Analite.Domain.Entities;
+using Analite.Domain.Exceptions;
 using Analite.Infrastructure.EFCore;
 
 using Microsoft.EntityFrameworkCore;
@@ -25,8 +26,8 @@ public class CustomerService : ICustomerService
 	public async Task<CustomerGetDto> GetById(Guid customerId)
 	{
 		if(customerId != _id.Id)
-			throw new UnauthorizedAccessException();
-		Customer entity = await _db.Customers.FindAsync(customerId) ?? throw new InvalidOperationException("Customer not found");
+			throw new NoAccessException("other users");
+		Customer entity = await _db.Customers.FindAsync(customerId) ?? throw new NotFoundException("Customer");
 		return new CustomerGetDto
 		{
 			Id = entity.Id,
@@ -42,16 +43,16 @@ public class CustomerService : ICustomerService
 	public async Task<bool> IsActiveAsync(Guid customerId)
 	{
 		if(customerId != _id.Id)
-			throw new UnauthorizedAccessException();
-		Customer entity = await _db.Customers.FindAsync(customerId) ?? throw new InvalidOperationException("Customer not found");
+			throw new NoAccessException("others activeness");
+		Customer entity = await _db.Customers.FindAsync(customerId) ?? throw new NotFoundException("Customer");
 		return entity.IsActive;
 	}
 
 	public async Task<bool> IsApprovedAsync(Guid customerId)
 	{
 		if(customerId != _id.Id)
-			throw new UnauthorizedAccessException();
-		Customer entity = await _db.Customers.FindAsync(customerId) ?? throw new InvalidOperationException("Customer not found");
+			throw new NoAccessException("others approval");
+		Customer entity = await _db.Customers.FindAsync(customerId) ?? throw new NotFoundException("Customer");
 		return entity.IsApproved;
 	}
 
@@ -59,9 +60,9 @@ public class CustomerService : ICustomerService
 	{
 		Customer entity = await _db.Customers
 			.FirstOrDefaultAsync(c => c.Email.ToLower() == email.ToLower())
-			?? throw new UnauthorizedAccessException("Invalid email or password");
+			?? throw new UnauthorizedException("Email or password");
 		if(!BCrypt.Net.BCrypt.Verify(password, entity.PasswordHash))
-			throw new UnauthorizedAccessException("Invalid email or password");
+			throw new UnauthorizedException("Email or password");
 		return _tk.GenerateToken(entity);
 	}
 
@@ -99,8 +100,8 @@ public class CustomerService : ICustomerService
 	public async Task ResetPublicKey(Guid customerId)
 	{
 		if(customerId != _id.Id)
-			throw new UnauthorizedAccessException();
-		Customer entity = await _db.Customers.FindAsync(customerId) ?? throw new InvalidOperationException("Customer not found");
+			throw new NoAccessException("reset other users key");
+		Customer entity = await _db.Customers.FindAsync(customerId) ?? throw new NotFoundException("Customer");
 		entity.PublicKey = Guid.NewGuid().ToString();
 		await _db.SaveChangesAsync();
 		return;
@@ -109,14 +110,14 @@ public class CustomerService : ICustomerService
 	public async Task UpdateCustomerAsync(Guid customerId, CustomerCreateDto dto)
 	{
 		if(customerId != _id.Id)
-			throw new UnauthorizedAccessException();
-		Customer entity = await _db.Customers.FindAsync(customerId) ?? throw new InvalidOperationException("Customer not found");
+			throw new NoAccessException("update other users");
+		Customer entity = await _db.Customers.FindAsync(customerId) ?? throw new NotFoundException("Customer");
 
 		if(dto.Email != entity.Email)
 		{
 			bool emailExists = await _db.Customers.AnyAsync(c => c.Email.ToLower() == dto.Email.ToLower());
 			if(emailExists)
-				throw new InvalidOperationException("Email already in use");
+				throw new UsedException("Email");
 			entity.Email = dto.Email;
 			entity.SecurityStamp = Guid.NewGuid().ToString();
 		}
