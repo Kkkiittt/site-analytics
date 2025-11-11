@@ -8,7 +8,7 @@ public interface IFlowService
 {
 	Task<FlowSummaryLengthDto> GetFlowSummaryByLengthAsync(Guid customerId, DateTime? from, DateTime? to);
 
-	Task<FlowSummaryLengthDto> GetFlowSummaryByDurationAsync(Guid customerId, DateTime? from, DateTime? to);
+	Task<FlowSummaryDurationDto> GetFlowSummaryByDurationAsync(Guid customerId, DateTime? from, DateTime? to);
 
 	Task<ManyDto<FlowGetDto>> GetFlowsAsync(Guid customerId, DateTime? from, DateTime? to, PaginationData pagination);
 
