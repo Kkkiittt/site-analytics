@@ -20,8 +20,7 @@ public class ResultService : IResultService
 
 	public async Task<ConversionDto> GetConversionAsync(Guid customerId, DateTime? from, DateTime? to)
 	{
-		var query = _db.Events
-						   .Where(e => e.CustomerId == customerId);
+		var query = _db.Events.Where(e => e.CustomerId == customerId);
 		if(from != null)
 		{
 			query = query.Where(e => e.OccuredAt >= from);
