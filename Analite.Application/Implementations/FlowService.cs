@@ -78,6 +78,12 @@ public class FlowService : IFlowService
 			}).ToList()
 			,
 		}).ToList();
+		return new ManyDto<FlowGetDto>()
+		{
+			Total = total,
+			Items = items,
+			Pagination = pagination,
+		};
 	}
 
 	public Task<IEnumerable<FlowGetDto>> GetFlowsInCacheAsync(Guid customerId, int limit)
