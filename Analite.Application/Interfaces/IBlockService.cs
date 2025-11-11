@@ -9,6 +9,6 @@ public interface IBlockService
 	Task<BlockGetDto> UpdateBlockAsync(long id, BlockCreateDto blockCreateDto);
 	Task DeleteBlockAsync(long id);
 
-	Task<BlockGetDto?> GetByIdAsync(long id);
+	Task<BlockGetDto> GetByIdAsync(long id);
 	Task<IEnumerable<BlockGetDto>> GetByPageAsync(long pageId);
 }
