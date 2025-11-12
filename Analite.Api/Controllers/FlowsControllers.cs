@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Analite.Api.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("flows")]
 [Authorize]
 public class FlowsController : Controller
 {

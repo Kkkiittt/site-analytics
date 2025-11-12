@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Analite.Api.Controllers;
 
 [ApiController]
-[Route("blocks/")]
+[Route("blocks")]
 [Authorize]
 public class BlocksController : Controller
 {

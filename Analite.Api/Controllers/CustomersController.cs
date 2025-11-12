@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Analite.Api.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("customers")]
 [Authorize]
 public class CustomersController : Controller
 {
