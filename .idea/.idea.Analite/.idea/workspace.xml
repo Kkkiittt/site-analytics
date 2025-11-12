@@ -11,9 +11,13 @@
     <list default="true" id="af0e24d4-d171-4ab6-b6f6-9c8277eb1670" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Analite/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Analite/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Analite.Api/Analite.Api.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Analite.Api/Analite.Api.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Analite.Api/Middlewares/ExceptionMiddleware.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Analite.Api/Middlewares/ExceptionMiddleware.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Analite.Api/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Analite.Api/Program.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Analite.Api/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/Analite.Api/appsettings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Analite.Application/Implementations/TokenService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Analite.Application/Implementations/TokenService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Analite.Application/Analite.Application.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Analite.Application/Analite.Application.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Analite.Application/Implementations/AdminService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Analite.Application/Implementations/AdminService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Analite.Domain/Analite.Domain.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Analite.Domain/Analite.Domain.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Analite.Infrastructure/Analite.Infrastructure.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Analite.Infrastructure/Analite.Infrastructure.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,12 +49,14 @@
     <setting file="file://$PROJECT_DIR$/Analite.Api/Controllers/FlowsControllers.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Analite.Api/Controllers/PagesController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Analite.Api/Controllers/ResultController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/97ec6e16ad544753a4c8c168032ced6d56000/60/1c82cedd/IMiddleware.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/6115ab444f3a5af972f3afa415bde3d53fdcef053d1eaee74fdb3fc91dd/IMiddleware.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file:///usr/local/share/dotnet/sdk/9.0.303/Sdks/Microsoft.NET.Sdk/analyzers/build/config/analysislevel_9_default.globalconfig" root0="FORCE_HIGHLIGHTING" />
   </component>
-  <component name="KubernetesApiPersistence"><![CDATA[{}]]></component>
-  <component name="KubernetesApiProvider"><![CDATA[{
-  "isMigrated": true
-}]]></component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="Toolset" />
   </component>
@@ -62,28 +68,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    ".NET Launch Settings Profile.Analite.Api: https.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "/Users/ayder/GitHub/site-analytics",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;.NET Launch Settings Profile.Analite.Api: https.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/ayder/GitHub/site-analytics&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "postgresql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected=".NET Launch Settings Profile.Analite.Api: https">
     <configuration name="Analite.Api: http" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/Analite.Api/Analite.Api.csproj" />

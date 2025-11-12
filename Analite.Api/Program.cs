@@ -1,4 +1,6 @@
 using System.Text;
+using Analite.Api.Middlewares;
+using Serilog;
 
 using Analite.Api.Middlewares;
 using Analite.Api.Services;
@@ -13,6 +15,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -90,9 +93,25 @@ builder.Services.AddStackExchangeRedisCache(opt =>
 	opt.Configuration = "localhost:6379";
 });
 
+Log.Logger = new LoggerConfiguration()
+	.MinimumLevel.Information()
+	.MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Information)
+	.MinimumLevel.Override("Default", LogEventLevel.Information)
+	.WriteTo.Console()
+	.WriteTo.File("logs/log.txt", rollingInterval: RollingInterval.Day)
+	.CreateLogger();
+
+builder.Host.UseSerilog();
+
+builder.Services.AddTransient<ExceptionMiddleware>();
 
 
 var app = builder.Build();
+
+
+app.UseMiddleware<ExceptionMiddleware>();
+
+
 
 if(app.Environment.IsDevelopment())
 {
