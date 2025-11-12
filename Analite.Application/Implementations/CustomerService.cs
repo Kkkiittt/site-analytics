@@ -41,16 +41,18 @@ public class CustomerService : ICustomerService
 		};
 	}
 
-	public async Task<bool> IsActiveAsync(Guid customerId)
+	public async Task<bool> IsActiveAsync(Guid? customerId)
 	{
+		customerId ??= _id.Id;
 		if(customerId != _id.Id)
 			throw new NoAccessException("others activeness");
 		Customer entity = await _db.Customers.FindAsync(customerId) ?? throw new NotFoundException("Customer");
 		return entity.IsActive;
 	}
 
-	public async Task<bool> IsApprovedAsync(Guid customerId)
+	public async Task<bool> IsApprovedAsync(Guid? customerId)
 	{
+		customerId ??= _id.Id;
 		if(customerId != _id.Id)
 			throw new NoAccessException("others approval");
 		Customer entity = await _db.Customers.FindAsync(customerId) ?? throw new NotFoundException("Customer");
@@ -109,8 +111,9 @@ public class CustomerService : ICustomerService
 		};
 	}
 
-	public async Task ResetPublicKey(Guid customerId)
+	public async Task ResetPublicKey(Guid? customerId)
 	{
+		customerId ??= _id.Id;
 		if(customerId != _id.Id)
 			throw new NoAccessException("reset other users key");
 		Customer entity = await _db.Customers.FindAsync(customerId) ?? throw new NotFoundException("Customer");
@@ -119,8 +122,9 @@ public class CustomerService : ICustomerService
 		return;
 	}
 
-	public async Task UpdateCustomerAsync(Guid customerId, CustomerCreateDto dto)
+	public async Task UpdateCustomerAsync(Guid? customerId, CustomerCreateDto dto)
 	{
+		customerId ??= _id.Id;
 		if(customerId != _id.Id)
 			throw new NoAccessException("update other users");
 		Customer entity = await _db.Customers.FindAsync(customerId) ?? throw new NotFoundException("Customer");

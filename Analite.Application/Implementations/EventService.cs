@@ -49,7 +49,14 @@ public class EventService : IEventService
 		};
 		_db.Events.Add(entity);
 		await _db.SaveChangesAsync();
-		await AddToCacheAsync(entity);
+		try
+		{
+			await AddToCacheAsync(entity);
+		}
+		catch(Exception ex)
+		{
+			//its okay, log or sth
+		}
 	}
 
 	private async Task AddToCacheAsync(Event entity)
@@ -88,6 +95,14 @@ public class EventService : IEventService
 		current.Blocks.Add(block);
 		current.Pages.Add(page);
 		current.EndAt = entity.OccuredAt;
+
+		List<ShortDto> pagesFiltered = [];
+		foreach(var p in current.Pages)
+		{
+			if(p.Name!=pagesFiltered.Last().Name)
+				pagesFiltered.Add(p);
+		}
+		current.Pages = pagesFiltered;
 
 		await _cache.SetStringAsync(key, JsonSerializer.Serialize(existing), new DistributedCacheEntryOptions()
 		{

@@ -10,7 +10,7 @@ public interface IPageService
 	Task DeletePageAsync(long id);
 
 	Task<PageGetDto> GetByIdAsync(long id);
-	Task<IEnumerable<PageGetDto>> GetByCustomerAsync(Guid customerId);
+	Task<IEnumerable<PageGetDto>> GetByCustomerAsync(Guid? customerId);
 
 	Task<int> GetVisitsCountsAsync(long pageId);
 	Task<int> GetUniqueUsersCountsAsync(long pageId);

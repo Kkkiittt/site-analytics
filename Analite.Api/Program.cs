@@ -1,5 +1,6 @@
 using System.Text;
 
+using Analite.Api.Middlewares;
 using Analite.Api.Services;
 using Analite.Application.Implementations;
 using Analite.Application.Interfaces;
@@ -82,6 +83,8 @@ builder.Services.AddScoped<IBlockService, BlockService>();
 
 builder.Services.AddHttpContextAccessor();
 
+builder.Services.AddScoped<ExceptionMiddleware>();
+
 builder.Services.AddStackExchangeRedisCache(opt =>
 {
 	opt.Configuration = "localhost:6379";
@@ -127,6 +130,8 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.MapControllers();
 

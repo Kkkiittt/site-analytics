@@ -17,17 +17,22 @@ public class FlowService : IFlowService
 {
 	private readonly AppDbContext _db;
 	private readonly IDistributedCache _cache;
+	private readonly IIdentityService _id;
 
-	public FlowService(AppDbContext db, IDistributedCache cache)
+	public FlowService(AppDbContext db, IDistributedCache cache, IIdentityService id)
 	{
 		_db = db;
 		_cache = cache;
+		_id = id;
 	}
 
-	public async Task<ManyDto<FlowGetDto>> GetFlowsAsync(Guid customerId, DateTime? from, DateTime? to, PaginationData pagination)
+	public async Task<ManyDto<FlowGetDto>> GetFlowsAsync(Guid? id, DateTime? from, DateTime? to, PaginationData pagination)
 	{
+		id ??= _id.Id;
+		if(id != _id.Id)
+			throw new NoAccessException("Others' flows");
 		int skip = (pagination.Page - 1) * pagination.PageSize;
-		var query = _db.Flows.Where(f => f.CustomerId == customerId);
+		var query = _db.Flows.Where(f => f.CustomerId == id);
 		if(from.HasValue)
 		{
 			query = query.Where(f => f.StartAt >= from.Value);
@@ -91,16 +96,23 @@ public class FlowService : IFlowService
 		};
 	}
 
-	public async Task<IEnumerable<FlowGetDto>> GetFlowsInCacheAsync(Guid customerId, int limit)
+	public async Task<IEnumerable<FlowGetDto>> GetFlowsInCacheAsync(Guid? id, int limit)
 	{
-		string? value = await _cache.GetStringAsync(customerId.ToString());
+		id ??= _id.Id;
+		if(id != _id.Id)
+			throw new NoAccessException("Others' flows");
+		string? value = await _cache.GetStringAsync(id.ToString());
 		if(value == null)
 			return [];
 		return (JsonSerializer.Deserialize<List<FlowGetDto>>(value) ?? []).Take(limit);
 	}
 
-	public async Task<FlowSummaryLengthDto> GetFlowSummaryByLengthAsync(Guid customerId, DateTime? from, DateTime? to)
+	public async Task<FlowSummaryLengthDto> GetFlowSummaryByLengthAsync(Guid? customerId, DateTime? from, DateTime? to)
 	{
+		customerId ??= _id.Id;
+
+		if(customerId != _id.Id)
+			throw new NoAccessException("Others' flows");
 		var query = _db.Flows.Where(f => f.CustomerId == customerId);
 		if(from.HasValue)
 		{
@@ -133,8 +145,11 @@ public class FlowService : IFlowService
 		};
 	}
 
-	public async Task<FlowSummaryDurationDto> GetFlowSummaryByDurationAsync(Guid customerId, DateTime? from, DateTime? to)
+	public async Task<FlowSummaryDurationDto> GetFlowSummaryByDurationAsync(Guid? customerId, DateTime? from, DateTime? to)
 	{
+		customerId ??= _id.Id;
+		if(customerId != _id.Id)
+			throw new NoAccessException("Others' flows");
 		var query = _db.Flows.Where(f => f.CustomerId == customerId);
 		if(from.HasValue)
 		{

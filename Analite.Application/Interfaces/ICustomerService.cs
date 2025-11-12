@@ -13,10 +13,10 @@ public interface ICustomerService
 	Task<CustomerGetDto> GetById(Guid? customerId);
 
 
-	Task UpdateCustomerAsync(Guid customerId, CustomerCreateDto customerCreateDto);
+	Task UpdateCustomerAsync(Guid? customerId, CustomerCreateDto customerCreateDto);
 
-	Task<bool> IsApprovedAsync(Guid customerId);
-	Task<bool> IsActiveAsync(Guid customerId);
+	Task<bool> IsApprovedAsync(Guid? customerId);
+	Task<bool> IsActiveAsync(Guid? customerId);
 
-	Task ResetPublicKey(Guid customerId);
+	Task ResetPublicKey(Guid? customerId);
 }

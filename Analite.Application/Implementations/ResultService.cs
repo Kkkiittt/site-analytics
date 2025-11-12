@@ -12,15 +12,20 @@ namespace Analite.Application.Implementations;
 public class ResultService : IResultService
 {
 	private readonly AppDbContext _db;
+	private readonly IIdentityService _id;
 
-	public ResultService(AppDbContext db)
+	public ResultService(AppDbContext db, IIdentityService id)
 	{
 		_db = db;
+		_id = id;
 	}
 
-	public async Task<ConversionDto> GetConversionAsync(Guid customerId, DateTime? from, DateTime? to)
+	public async Task<ConversionDto> GetConversionAsync(Guid? id, DateTime? from, DateTime? to)
 	{
-		var query = _db.Events.Where(e => e.CustomerId == customerId);
+		id ??= _id.Id;
+		if(id != _id.Id)
+			throw new NoAccessException("Others' conversion");
+		var query = _db.Events.Where(e => e.CustomerId == id);
 		if(from != null)
 		{
 			query = query.Where(e => e.OccuredAt >= from);
@@ -50,6 +55,9 @@ public class ResultService : IResultService
 	{
 
 		var page = await _db.Pages.FindAsync(pageId) ?? throw new NotFoundException("Page");
+
+		if(page.CustomerId != _id.Id)
+			throw new NoAccessException("Others' pages");
 
 		var customerId = page.CustomerId;
 

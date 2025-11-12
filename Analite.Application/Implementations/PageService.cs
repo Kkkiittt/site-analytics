@@ -52,10 +52,13 @@ public class PageService : IPageService
 		await _db.SaveChangesAsync();
 	}
 
-	public async Task<IEnumerable<PageGetDto>> GetByCustomerAsync(Guid customerId)
+	public async Task<IEnumerable<PageGetDto>> GetByCustomerAsync(Guid? id)
 	{
+		id ??= _id.Id;
+		if(id != _id.Id)
+			throw new NoAccessException("Others' pages");
 		return await _db.Pages
-					.Where(p => p.CustomerId == customerId)
+					.Where(p => p.CustomerId == id)
 					.Select(p => new PageGetDto()
 					{
 						Blocks = p.Blocks.Select(b => new ShortDto()
