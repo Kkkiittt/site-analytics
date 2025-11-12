@@ -35,18 +35,27 @@ public class ResultService : IResultService
 		}
 		var res = await query.GroupBy(e => e.PageId)
 			.Select(g => new { g.Key, Clicks = g.Count() })
-			.Join(_db.Pages, s => s.Key, p => p.Id, (s, p) => new ClickDto()
+			.Join(_db.Pages, s => s.Key, p => p.Id, (s, p) => new
 			{
 				Clicks = s.Clicks,
 				Id = p.Id.ToString(),
 				Name = p.Name,
+				Order = p.Order,
 			})
+			.OrderBy(e => e.Order)
 			.ToListAsync();
+		float total = res.FirstOrDefault()?.Clicks ?? 0;
 		return new ConversionDto()
 		{
 			From = from ?? DateTime.MinValue,
 			To = to ?? DateTime.MaxValue,
-			Pages = res
+			Pages = res.Select(r => new ClickDto()
+			{
+				Clicks = r.Clicks,
+				Id = r.Id,
+				Name = r.Name,
+				Percentage = r.Clicks / total
+			})
 		};
 	}
 
@@ -73,6 +82,7 @@ public class ResultService : IResultService
 			query = query.Where(e => e.OccuredAt <= to);
 		}
 
+		long total = await query.CountAsync();
 		var res = await query.GroupBy(e => e.BlockId)
 			.Select(g => new { g.Key, Clicks = g.Count() })
 			.Join(_db.Blocks, s => s.Key, b => b.Id, (s, b) => new ClickDto()
@@ -80,6 +90,7 @@ public class ResultService : IResultService
 				Clicks = s.Clicks,
 				Id = b.Id.ToString(),
 				Name = b.Name,
+				Percentage = (float)s.Clicks / total
 			})
 			.ToListAsync();
 

@@ -31,6 +31,7 @@ public class PageService : IPageService
 			CustomerId = _id.Id,
 			Description = dto.Description,
 			Name = dto.Name,
+			Order = dto.Order
 		};
 		_db.Pages.Add(entity);
 		await _db.SaveChangesAsync();
@@ -69,6 +70,7 @@ public class PageService : IPageService
 						Description = p.Description,
 						Id = p.Id,
 						Name = p.Name,
+						Order = p.Order,
 					}).ToListAsync();
 	}
 
@@ -84,6 +86,7 @@ public class PageService : IPageService
 				Id = b.Id.ToString(),
 				Name = b.Name
 			}).ToList(),
+			Order = entity.Order,
 			Description = entity.Description,
 			Id = entity.Id,
 			Name = entity.Name,
@@ -113,6 +116,7 @@ public class PageService : IPageService
 			throw new NoAccessException("Others' pages");
 		entity.Name = dto.Name;
 		entity.Description = dto.Description;
+		entity.Order = dto.Order;
 		await _db.SaveChangesAsync();
 		return new PageGetDto()
 		{
@@ -121,6 +125,7 @@ public class PageService : IPageService
 				Id = b.Id.ToString(),
 				Name = b.Name,
 			}).ToList(),
+			Order = entity.Order,
 			Description = entity.Description,
 			Id = entity.Id,
 			Name = entity.Name,

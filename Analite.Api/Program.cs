@@ -1,6 +1,4 @@
 using System.Text;
-using Analite.Api.Middlewares;
-using Serilog;
 
 using Analite.Api.Middlewares;
 using Analite.Api.Services;
@@ -9,12 +7,12 @@ using Analite.Application.Interfaces;
 using Analite.Domain.Entities;
 using Analite.Infrastructure.EFCore;
 
-using BCrypt.Net;
-
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+
+using Serilog;
 using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
