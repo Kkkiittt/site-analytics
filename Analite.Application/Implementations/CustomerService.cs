@@ -44,8 +44,6 @@ public class CustomerService : ICustomerService
 	public async Task<bool> IsActiveAsync(Guid? customerId)
 	{
 		customerId ??= _id.Id;
-		if(customerId != _id.Id)
-			throw new NoAccessException("others activeness");
 		Customer entity = await _db.Customers.FindAsync(customerId) ?? throw new NotFoundException("Customer");
 		return entity.IsActive;
 	}
@@ -53,8 +51,6 @@ public class CustomerService : ICustomerService
 	public async Task<bool> IsApprovedAsync(Guid? customerId)
 	{
 		customerId ??= _id.Id;
-		if(customerId != _id.Id)
-			throw new NoAccessException("others approval");
 		Customer entity = await _db.Customers.FindAsync(customerId) ?? throw new NotFoundException("Customer");
 		return entity.IsApproved;
 	}
@@ -66,6 +62,10 @@ public class CustomerService : ICustomerService
 			?? throw new UnauthorizedException("Email or password");
 		if(!BCrypt.Net.BCrypt.Verify(password, entity.PasswordHash))
 			throw new UnauthorizedException("Email or password");
+		if(!entity.IsApproved)
+			throw new NoAccessException("Anything upon approval");
+		if(!entity.IsActive)
+			throw new NotFoundException("Account was deactivated");
 		return _tk.GenerateToken(entity);
 	}
 

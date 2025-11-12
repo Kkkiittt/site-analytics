@@ -57,6 +57,7 @@ public class CustomersController : Controller
 	}
 
 	[HttpGet("approved")]
+	[AllowAnonymous]
 	public async Task<IActionResult> IsApproved(Guid? id=null)
 	{
 		bool result = await _customerService.IsApprovedAsync(id);
@@ -64,6 +65,7 @@ public class CustomersController : Controller
 	}
 
 	[HttpGet("active")]
+	[AllowAnonymous]
 	public async Task<IActionResult> IsActive(Guid? id=null)
 	{
 		bool result = await _customerService.IsActiveAsync(id);
