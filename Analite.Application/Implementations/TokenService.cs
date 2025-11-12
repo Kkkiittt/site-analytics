@@ -38,7 +38,7 @@ public class TokenService : ITokenService
 			issuer: _conf["Issuer"],
 			audience: _conf["Audience"],
 			claims: claims,
-			expires: DateTime.UtcNow.AddDays(double.Parse(_conf["Lifetime"] ?? "1")),
+			expires: DateTime.UtcNow.AddHours(double.Parse(_conf["Lifetime"] ?? "1")),
 			signingCredentials: creds
 		);
 
