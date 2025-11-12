@@ -20,21 +20,21 @@ public class FlowsController : Controller
 	}
 
 	[HttpGet("{customerId:guid}/summary-length")]
-	public async Task<IActionResult> GetFlowSummaryByLength(Guid customerId, [FromQuery] DateTime? from = null, [FromQuery] DateTime? to = null)
+	public async Task<IActionResult> GetFlowSummaryByLengthAsync(Guid customerId, [FromQuery] DateTime? from = null, [FromQuery] DateTime? to = null)
 	{
-		var summary = await _flowService.GetFlowSummaryAsync(customerId, from, to, SummaryType.ByLength);
+		var summary = await _flowService.GetFlowSummaryByLengthAsync(customerId, from, to);
 		return Ok(summary);
 	}
 
 	[HttpGet("{customerId:guid}/summary-time")]
-	public async Task<IActionResult> GetFlowSummaryByTime(Guid customerId, [FromQuery] DateTime? from = null, [FromQuery] DateTime? to = null)
+	public async Task<IActionResult> GetFlowSummaryByDurationAsync(Guid customerId, [FromQuery] DateTime? from = null, [FromQuery] DateTime? to = null)
 	{
-		var summary = await _flowService.GetFlowSummaryAsync(customerId, from, to, SummaryType.ByTime);
+		var summary = await _flowService.GetFlowSummaryByDurationAsync(customerId, from, to);
 		return Ok(summary);
 	}
 
 	[HttpGet("{customerId:guid}")]
-	public async Task<IActionResult> GetFlows(Guid customerId, [FromQuery] DateTime? from = null, [FromQuery] DateTime? to = null, [FromQuery] int page = 1, [FromQuery] int pageSize = 20)
+	public async Task<IActionResult> GetFlowsAsync(Guid customerId, [FromQuery] DateTime? from = null, [FromQuery] DateTime? to = null, [FromQuery] int page = 1, [FromQuery] int pageSize = 20)
 	{
 		var pagination = new PaginationData { Page = page, PageSize = pageSize };
 		var flows = await _flowService.GetFlowsAsync(customerId, from, to, pagination);
