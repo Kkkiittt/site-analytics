@@ -30,13 +30,13 @@ public class TokenService : ITokenService
 			new Claim(ClaimTypes.Sid, entity.SecurityStamp)
 		};
 
-		SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_conf["Key"] ?? throw new Exception("No Jwt Key!!!")));
+		SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_conf["Jwt:Key"] ?? throw new Exception("No Jwt Key!!!")));
 
 		SigningCredentials creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
 		JwtSecurityToken token = new JwtSecurityToken(
-			issuer: _conf["Issuer"],
-			audience: _conf["Audience"],
+			issuer: _conf["Jwt:Issuer"],
+			audience: _conf["Jwt:Audience"],
 			claims: claims,
 			expires: DateTime.UtcNow.AddDays(double.Parse(_conf["Lifetime"] ?? "1")),
 			signingCredentials: creds
@@ -66,7 +66,7 @@ public class TokenService : ITokenService
 		{
 			ValidateIssuer = true,
 			ValidateAudience = false,
-			IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_conf["Key"] ?? throw new Exception("No Jwt key!!!"))),
+			IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_conf["Jwt:Key"] ?? throw new Exception("No Jwt key!!!"))),
 			ValidateIssuerSigningKey = true,
 			ValidateLifetime = false
 		};
