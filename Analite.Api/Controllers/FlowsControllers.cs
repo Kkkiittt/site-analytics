@@ -47,4 +47,12 @@ public class FlowsController : Controller
 		var cached = await _flowService.GetFlowsInCacheAsync(customerId, limit);
 		return Ok(cached);
 	}
+
+	[HttpPost]
+	[Authorize(Roles ="Admin, SuperAdmin")]
+	public async Task<IActionResult> CreateFlows()
+	{
+		await _flowService.CreateFlowsAsync();
+		return NoContent();
+	}
 }

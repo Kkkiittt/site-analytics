@@ -5,6 +5,7 @@ using Analite.Application.Dtos;
 using Analite.Application.Dtos.Get;
 using Analite.Application.Dtos.Results;
 using Analite.Application.Interfaces;
+using Analite.Domain.Entities;
 using Analite.Domain.Exceptions;
 using Analite.Infrastructure.EFCore;
 
@@ -180,5 +181,41 @@ public class FlowService : IFlowService
 			Maximum = max ?? throw new NotFoundException("Flows in given range"),
 			AverageDuration = TimeSpan.FromTicks((long)average),
 		};
+	}
+
+	public async Task CreateFlowsAsync()
+	{
+		var events = _db.Events.Where(e => !e.Handled);
+		var customerIds = await events.Select(e => e.CustomerId).Distinct().ToListAsync();
+		foreach(var id in customerIds)
+		{
+			var groups = await events.Where(e => e.CustomerId == id)
+				.GroupBy(e => e.SessionId).ToListAsync();
+			var flows = groups.Select(g => new Flow()
+			{
+				SessionId = g.Key,
+				StartAt = g.Min(e => e.OccuredAt),
+				EndAt = g.Max(e => e.OccuredAt),
+				BlockIds = g.Select(e => e.BlockId).ToList(),
+				CustomerId = id,
+				PageIds = g.Select(e => e.PageId).ToList()
+			}).ToList();
+			foreach(var flow in flows)
+			{
+				var pagesFiltered = new List<long>();
+				foreach(var pageId in flow.PageIds)
+				{
+					if(pageId != pagesFiltered.LastOrDefault())
+						pagesFiltered.Add(pageId);
+				}
+				flow.PageIds = pagesFiltered;
+			}
+
+			_db.Flows.AddRange(flows);
+			await events.ExecuteUpdateAsync(st =>
+				st.SetProperty(e => e.Handled, true)
+			);
+			await _db.SaveChangesAsync();
+		}
 	}
 }

@@ -99,7 +99,7 @@ public class EventService : IEventService
 		List<ShortDto> pagesFiltered = [];
 		foreach(var p in current.Pages)
 		{
-			if(p.Name!=pagesFiltered.Last().Name)
+			if(p.Name != pagesFiltered.LastOrDefault()?.Name)
 				pagesFiltered.Add(p);
 		}
 		current.Pages = pagesFiltered;

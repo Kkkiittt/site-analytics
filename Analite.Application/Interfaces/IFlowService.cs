@@ -13,4 +13,6 @@ public interface IFlowService
 	Task<ManyDto<FlowGetDto>> GetFlowsAsync(Guid? customerId, DateTime? from, DateTime? to, PaginationData pagination);
 
 	Task<IEnumerable<FlowGetDto>> GetFlowsInCacheAsync(Guid? customerId, int limit);
+
+	Task CreateFlowsAsync();
 }

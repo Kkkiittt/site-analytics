@@ -1,4 +1,3 @@
-using Analite.Application.Dtos.Results;
 using Analite.Application.Interfaces;
 
 using Microsoft.AspNetCore.Authorization;
