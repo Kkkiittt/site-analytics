@@ -8,4 +8,6 @@ public class Page
 
 	public Guid CustomerId { get; set; }
 	public Customer Customer { get; set; } = null!;
+
+	public IList<Block> Blocks { get; set; } = new List<Block>();
 }
