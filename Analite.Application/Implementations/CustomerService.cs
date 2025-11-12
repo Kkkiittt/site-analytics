@@ -23,8 +23,9 @@ public class CustomerService : ICustomerService
 		_tk = tk;
 	}
 
-	public async Task<CustomerGetDto> GetById(Guid customerId)
+	public async Task<CustomerGetDto> GetById(Guid? customerId)
 	{
+		customerId ??= _id.Id;
 		if(customerId != _id.Id)
 			throw new NoAccessException("other users");
 		Customer entity = await _db.Customers.FindAsync(customerId) ?? throw new NotFoundException("Customer");

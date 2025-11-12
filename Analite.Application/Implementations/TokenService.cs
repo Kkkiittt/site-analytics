@@ -65,6 +65,7 @@ public class TokenService : ITokenService
 		var validation = new TokenValidationParameters
 		{
 			ValidateIssuer = true,
+			ValidIssuer=_conf["Issuer"],
 			ValidateAudience = false,
 			IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_conf["Key"] ?? throw new Exception("No Jwt key!!!"))),
 			ValidateIssuerSigningKey = true,
@@ -74,8 +75,9 @@ public class TokenService : ITokenService
 		{
 			handler.ValidateToken(token, validation, out _);
 		}
-		catch
+		catch(Exception ex)
 		{
+			//throw ex;
 			throw new UnauthorizedException("Token");
 		}
 	}

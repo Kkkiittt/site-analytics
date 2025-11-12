@@ -77,8 +77,15 @@ builder.Services.AddScoped<IFlowService, FlowService>();
 builder.Services.AddScoped<IResultService, ResultService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IIdentityService, IdentityService>();
+builder.Services.AddScoped<IPageService, PageService>();
+builder.Services.AddScoped<IBlockService, BlockService>();
 
 builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddStackExchangeRedisCache(opt =>
+{
+	opt.Configuration = "localhost:6379";
+});
 
 
 

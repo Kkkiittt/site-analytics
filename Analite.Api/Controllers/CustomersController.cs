@@ -48,8 +48,8 @@ public class CustomersController : Controller
 		return Ok();
 	}
 
-	[HttpGet("{id:guid}")]
-	public async Task<IActionResult> GetById(Guid id)
+	[HttpGet]
+	public async Task<IActionResult> GetById(Guid? id=null)
 	{
 		var customer = await _customerService.GetById(id);
 

@@ -10,7 +10,7 @@ public interface ICustomerService
 
 	Task<string> RefreshTokenAsync(string token);
 
-	Task<CustomerGetDto> GetById(Guid customerId);
+	Task<CustomerGetDto> GetById(Guid? customerId);
 
 
 	Task UpdateCustomerAsync(Guid customerId, CustomerCreateDto customerCreateDto);

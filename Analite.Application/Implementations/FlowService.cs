@@ -1,4 +1,6 @@
 ﻿
+using System.Text.Json;
+
 using Analite.Application.Dtos;
 using Analite.Application.Dtos.Get;
 using Analite.Application.Dtos.Results;
@@ -7,16 +9,19 @@ using Analite.Domain.Exceptions;
 using Analite.Infrastructure.EFCore;
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace Analite.Application.Implementations;
 
 public class FlowService : IFlowService
 {
 	private readonly AppDbContext _db;
+	private readonly IDistributedCache _cache;
 
-	public FlowService(AppDbContext db)
+	public FlowService(AppDbContext db, IDistributedCache cache)
 	{
 		_db = db;
+		_cache = cache;
 	}
 
 	public async Task<ManyDto<FlowGetDto>> GetFlowsAsync(Guid customerId, DateTime? from, DateTime? to, PaginationData pagination)
@@ -86,9 +91,12 @@ public class FlowService : IFlowService
 		};
 	}
 
-	public Task<IEnumerable<FlowGetDto>> GetFlowsInCacheAsync(Guid customerId, int limit)
+	public async Task<IEnumerable<FlowGetDto>> GetFlowsInCacheAsync(Guid customerId, int limit)
 	{
-		throw new NotImplementedException();
+		string? value = await _cache.GetStringAsync(customerId.ToString());
+		if(value == null)
+			return [];
+		return (JsonSerializer.Deserialize<List<FlowGetDto>>(value) ?? []).Take(limit);
 	}
 
 	public async Task<FlowSummaryLengthDto> GetFlowSummaryByLengthAsync(Guid customerId, DateTime? from, DateTime? to)
