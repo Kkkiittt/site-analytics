@@ -11,6 +11,7 @@ using Analite.Infrastructure.EFCore;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Logging;
 
 namespace Analite.Application.Implementations;
 
@@ -18,80 +19,129 @@ public class EventService : IEventService
 {
 	private readonly AppDbContext _db;
 	private readonly IDistributedCache _cache;
+	private readonly ILogger<EventService> _log;
 
-	public EventService(AppDbContext db, IDistributedCache cache)
+	public EventService(AppDbContext db, IDistributedCache cache, ILogger<EventService> log)
 	{
 		_db = db;
 		_cache = cache;
+		_log = log;
 	}
 
 	public async Task CollectAsync(EventCreateDto dto)
 	{
-		Customer? customer = await _db.Customers.FirstOrDefaultAsync(c => c.PublicKey == dto.CustomerKey);
-		if(customer == null)
-		{
-			throw new NotFoundException("Customer not found");
-		}
+		_log.LogDebug("[{Time}] Event received: Session {SessionId}, CustomerKey {CustomerKey}, Block {BlockName}, OccuredAt {OccuredAt}",
+			DateTime.UtcNow,
+			dto.SessionId,
+			dto.CustomerKey,
+			dto.BlockName,
+			dto.OccuredAt);
 
-		Block? block = await _db.Blocks.FirstOrDefaultAsync(b => b.CustomerId == customer.Id && b.Name == dto.BlockName);
-		if(block == null)
+		try
 		{
-			throw new NotFoundException("Block");
-		}
+			Customer? customer = await _db.Customers.FirstOrDefaultAsync(c => c.PublicKey == dto.CustomerKey);
+			if(customer == null)
+			{
+				throw new NotFoundException("Customer not found");
+			}
 
-		Event entity = new()
+			Block? block = await _db.Blocks.FirstOrDefaultAsync(b => b.CustomerId == customer.Id && b.Name == dto.BlockName);
+			if(block == null)
+			{
+				throw new NotFoundException("Block");
+			}
+
+			Event entity = new()
+			{
+				SessionId = dto.SessionId,
+				BlockId = block.Id,
+				CustomerId = customer.Id,
+				OccuredAt = dto.OccuredAt,
+				PageId = block.PageId,
+			};
+			_db.Events.Add(entity);
+			await _db.SaveChangesAsync();
+			
+			_log.LogInformation("Event stored successfully: Session {SessionId}, CustomerId {CustomerId}, Block {BlockId}, PageId {PageId}",
+				entity.SessionId,
+				entity.CustomerId,
+				entity.BlockId,
+				entity.PageId);
+			
+			await AddToCacheAsync(entity);
+		}
+		catch (Exception ex)
 		{
-			SessionId = dto.SessionId,
-			BlockId = block.Id,
-			CustomerId = customer.Id,
-			OccuredAt = dto.OccuredAt,
-			PageId = block.PageId,
-		};
-		_db.Events.Add(entity);
-		await _db.SaveChangesAsync();
-		await AddToCacheAsync(entity);
+			_log.LogError(ex, "Error while collecting event for session {SessionId}, CustomerKey {CustomerKey}, Block {BlockName}",
+				dto.SessionId,
+				dto.CustomerKey,
+				dto.BlockName);
+			throw;
+		}
+		
 	}
 
 	private async Task AddToCacheAsync(Event entity)
 	{
-		string key = entity.CustomerId.ToString();
-		List<FlowGetDto> existing = JsonSerializer.Deserialize<List<FlowGetDto>>(await _cache.GetStringAsync(key) ?? "[]") ?? [];
+		_log.LogDebug("[{Time}] Adding event {SessionId} for customer {CustomerId} to cache",
+			DateTime.UtcNow,
+			entity.SessionId,
+			entity.CustomerId);
 
-		FlowGetDto? current = existing.Find(f => f.Id == entity.SessionId);
-		if(current == null)
+		try
 		{
-			current = new FlowGetDto()
+			string key = entity.CustomerId.ToString();
+			List<FlowGetDto> existing =
+				JsonSerializer.Deserialize<List<FlowGetDto>>(await _cache.GetStringAsync(key) ?? "[]") ?? [];
+
+			FlowGetDto? current = existing.Find(f => f.Id == entity.SessionId);
+			if (current == null)
 			{
-				StartAt = entity.OccuredAt,
-				Id = entity.SessionId,
-			};
-			existing.Add(current);
-		}
-		ShortDto block = await _db.Blocks.Where(b => b.Id == entity.BlockId).Select(b => new ShortDto()
-		{
-			Id = b.Id.ToString(),
-			Name = b.Name,
-		}).FirstOrDefaultAsync() ?? new ShortDto()
-		{
-			Id = "",
-			Name = "Unknown",
-		};
-		ShortDto page = await _db.Pages.Where(p => p.Id == entity.PageId).Select(p => new ShortDto()
-		{
-			Id = p.Id.ToString(),
-			Name = p.Name,
-		}).FirstOrDefaultAsync() ?? new ShortDto()
-		{
-			Id = "",
-			Name = "Unknown"
-		};
-		current.Blocks.Add(block);
-		current.Pages.Add(page);
-		current.EndAt = entity.OccuredAt;
+				current = new FlowGetDto()
+				{
+					StartAt = entity.OccuredAt,
+					Id = entity.SessionId,
+				};
+				existing.Add(current);
+			}
 
-		await _cache.SetStringAsync(key, JsonSerializer.Serialize(existing), new DistributedCacheEntryOptions()
+			ShortDto block = await _db.Blocks.Where(b => b.Id == entity.BlockId).Select(b => new ShortDto()
+			{
+				Id = b.Id.ToString(),
+				Name = b.Name,
+			}).FirstOrDefaultAsync() ?? new ShortDto()
+			{
+				Id = "",
+				Name = "Unknown",
+			};
+			ShortDto page = await _db.Pages.Where(p => p.Id == entity.PageId).Select(p => new ShortDto()
+			{
+				Id = p.Id.ToString(),
+				Name = p.Name,
+			}).FirstOrDefaultAsync() ?? new ShortDto()
+			{
+				Id = "",
+				Name = "Unknown"
+			};
+			current.Blocks.Add(block);
+			current.Pages.Add(page);
+			current.EndAt = entity.OccuredAt;
+
+			await _cache.SetStringAsync(key, JsonSerializer.Serialize(existing), new DistributedCacheEntryOptions()
+			{
+				SlidingExpiration = TimeSpan.FromMinutes(5)
+			});
+
+			_log.LogInformation("Cache updated for customer {CustomerId}. Total flows cached: {FlowCount}",
+				entity.CustomerId,
+				existing.Count);
+		}
+		catch(Exception ex)
 		{
-			SlidingExpiration = TimeSpan.FromMinutes(5)
-		});
+			_log.LogError(ex, "Redis cache update failed for customer {CustomerId}, Session {SessionId}",
+				entity.CustomerId,
+				entity.SessionId);
+		}
+		
 	}
 }

@@ -10,14 +10,7 @@
   <component name="ChangeListManager">
     <list default="true" id="af0e24d4-d171-4ab6-b6f6-9c8277eb1670" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Analite/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Analite/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Analite.Api/Analite.Api.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Analite.Api/Analite.Api.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Analite.Api/Middlewares/ExceptionMiddleware.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Analite.Api/Middlewares/ExceptionMiddleware.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Analite.Api/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Analite.Api/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Analite.Api/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/Analite.Api/appsettings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Analite.Application/Analite.Application.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Analite.Application/Analite.Application.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Analite.Application/Implementations/AdminService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Analite.Application/Implementations/AdminService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Analite.Domain/Analite.Domain.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Analite.Domain/Analite.Domain.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Analite.Infrastructure/Analite.Infrastructure.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Analite.Infrastructure/Analite.Infrastructure.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Analite.Application/Implementations/EventService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Analite.Application/Implementations/EventService.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,28 +61,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;.NET Launch Settings Profile.Analite.Api: https.executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/ayder/GitHub/site-analytics&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    ".NET Launch Settings Profile.Analite.Api: https.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "logger",
+    "last_opened_file_path": "/Users/ayder/GitHub/site-analytics",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;postgresql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
     ]
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected=".NET Launch Settings Profile.Analite.Api: https">
     <configuration name="Analite.Api: http" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/Analite.Api/Analite.Api.csproj" />
