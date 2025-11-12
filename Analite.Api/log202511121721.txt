@@ -1,1 +1,0 @@
-2025-11-12 17:21:09.044 +05:00 [ERR] An error occurred using the connection to database 'Analite' on server 'tcp://localhost:5432'.

@@ -91,10 +91,11 @@ builder.Services.AddStackExchangeRedisCache(opt =>
 });
 
 Log.Logger = new LoggerConfiguration()
-	.MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Verbose)
-	.MinimumLevel.Override("Default", LogEventLevel.Verbose)
+	.MinimumLevel.Information()
+	.MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Information)
+	.MinimumLevel.Override("Default", LogEventLevel.Information)
 	.WriteTo.Console()
-	.WriteTo.File("log.txt", rollingInterval: RollingInterval.Minute)
+	.WriteTo.File("logs/log.txt", rollingInterval: RollingInterval.Day)
 	.CreateLogger();
 
 builder.Host.UseSerilog();
