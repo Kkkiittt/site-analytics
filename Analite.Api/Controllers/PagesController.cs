@@ -47,8 +47,8 @@ public class PagesController : Controller
         return Ok(page);
     }
 
-    [HttpGet("customer/{customerId:guid}")]
-    public async Task<IActionResult> GetByCustomer(Guid customerId)
+    [HttpGet("customer")]
+    public async Task<IActionResult> GetByCustomer(Guid? customerId = null)
     {
         var pages = await _pageService.GetByCustomerAsync(customerId);
         return Ok(pages);

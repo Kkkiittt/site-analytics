@@ -19,30 +19,30 @@ public class FlowsController : Controller
 		_flowService = flowService;
 	}
 
-	[HttpGet("{customerId:guid}/summary-length")]
-	public async Task<IActionResult> GetFlowSummaryByLengthAsync(Guid customerId, [FromQuery] DateTime? from = null, [FromQuery] DateTime? to = null)
+	[HttpGet("summary-length")]
+	public async Task<IActionResult> GetFlowSummaryByLengthAsync(Guid? customerId = null, [FromQuery] DateTime? from = null, [FromQuery] DateTime? to = null)
 	{
 		var summary = await _flowService.GetFlowSummaryByLengthAsync(customerId, from, to);
 		return Ok(summary);
 	}
 
-	[HttpGet("{customerId:guid}/summary-time")]
-	public async Task<IActionResult> GetFlowSummaryByDurationAsync(Guid customerId, [FromQuery] DateTime? from = null, [FromQuery] DateTime? to = null)
+	[HttpGet("summary-time")]
+	public async Task<IActionResult> GetFlowSummaryByDurationAsync(Guid? customerId = null, [FromQuery] DateTime? from = null, [FromQuery] DateTime? to = null)
 	{
 		var summary = await _flowService.GetFlowSummaryByDurationAsync(customerId, from, to);
 		return Ok(summary);
 	}
 
-	[HttpGet("{customerId:guid}")]
-	public async Task<IActionResult> GetFlowsAsync(Guid customerId, [FromQuery] DateTime? from = null, [FromQuery] DateTime? to = null, [FromQuery] int page = 1, [FromQuery] int pageSize = 20)
+	[HttpGet]
+	public async Task<IActionResult> GetFlowsAsync(Guid? customerId = null, [FromQuery] DateTime? from = null, [FromQuery] DateTime? to = null, [FromQuery] int page = 1, [FromQuery] int pageSize = 20)
 	{
 		var pagination = new PaginationData { Page = page, PageSize = pageSize };
 		var flows = await _flowService.GetFlowsAsync(customerId, from, to, pagination);
 		return Ok(flows);
 	}
 
-	[HttpGet("{customerId:guid}/cache")]
-	public async Task<IActionResult> GetCachedFlows(Guid customerId, [FromQuery] int limit = 10)
+	[HttpGet("cache")]
+	public async Task<IActionResult> GetCachedFlows(Guid? customerId = null, [FromQuery] int limit = 10)
 	{
 		var cached = await _flowService.GetFlowsInCacheAsync(customerId, limit);
 		return Ok(cached);

@@ -41,8 +41,8 @@ public class CustomersController : Controller
 		return Ok(result);
 	}
 
-	[HttpPut("{id:guid}")]
-	public async Task<IActionResult> Update(Guid id, [FromBody] CustomerCreateDto customerCreateDto)
+	[HttpPut]
+	public async Task<IActionResult> Update( [FromBody] CustomerCreateDto customerCreateDto, Guid? id = null)
 	{
 		await _customerService.UpdateCustomerAsync(id, customerCreateDto);
 		return Ok();
@@ -56,22 +56,22 @@ public class CustomersController : Controller
 		return Ok(customer);
 	}
 
-	[HttpGet("{id:guid}/approved")]
-	public async Task<IActionResult> IsApproved(Guid id)
+	[HttpGet("approved")]
+	public async Task<IActionResult> IsApproved(Guid? id=null)
 	{
 		bool result = await _customerService.IsApprovedAsync(id);
 		return Ok(result);
 	}
 
-	[HttpGet("{id:guid}/active")]
-	public async Task<IActionResult> IsActive(Guid id)
+	[HttpGet("active")]
+	public async Task<IActionResult> IsActive(Guid? id=null)
 	{
 		bool result = await _customerService.IsActiveAsync(id);
 		return Ok(result);
 	}
 
-	[HttpPost("reset-key/{id:guid}")]
-	public async Task<IActionResult> ResetKey(Guid id)
+	[HttpPost("reset-key")]
+	public async Task<IActionResult> ResetKey(Guid? id = null)
 	{
 		await _customerService.ResetPublicKey(id);
 		return Ok();

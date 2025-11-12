@@ -18,8 +18,8 @@ public class ResultsController : ControllerBase
 		_resultService = resultService;
 	}
 
-	[HttpGet("conversion/{customerId:guid}")]
-	public async Task<IActionResult> GetConversionAsync(Guid customerId, [FromQuery] DateTime? from = null, [FromQuery] DateTime? to = null)
+	[HttpGet("conversion")]
+	public async Task<IActionResult> GetConversionAsync(Guid? customerId = null, [FromQuery] DateTime? from = null, [FromQuery] DateTime? to = null)
 	{
 		return Ok(await _resultService.GetConversionAsync(customerId, from, to));
 	}

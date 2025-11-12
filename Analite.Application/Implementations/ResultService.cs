@@ -1,5 +1,4 @@
-﻿
-using Analite.Application.Dtos;
+﻿using Analite.Application.Dtos;
 using Analite.Application.Dtos.Results;
 using Analite.Application.Interfaces;
 using Analite.Domain.Exceptions;
