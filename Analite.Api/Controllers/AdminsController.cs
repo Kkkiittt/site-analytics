@@ -40,27 +40,27 @@ public class AdminsController : Controller
     public async Task<IActionResult> Approve(Guid id)
     {
         await _adminService.ApproveCustomerAsync(id);
-        return Ok();
+        return NoContent();
     }
 
     [HttpPut("block/{id:guid}")]
     public async Task<IActionResult> Block(Guid id)
     {
         await _adminService.BlockCustomerAsync(id);
-        return Ok();
+        return NoContent();
     }
 
     [HttpPut("unblock/{id:guid}")]
     public async Task<IActionResult> Unblock(Guid id)
     {
         await _adminService.UnblockCustomerAsync(id);
-        return Ok();
+        return NoContent();
     }
 
     [HttpPut("promote/{id:guid}")]
     public async Task<IActionResult> Promote(Guid id)
     {
         await _adminService.PromoteCustomerAsync(id);
-        return Ok();
+        return NoContent();
     }
 }
