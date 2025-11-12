@@ -17,7 +17,7 @@ public class TokenService : ITokenService
 
 	public TokenService(IConfiguration jwtConfiguration)
 	{
-		_conf = jwtConfiguration;
+		_conf = jwtConfiguration.GetSection("Jwt");
 	}
 
 	public string GenerateToken(Customer entity)
