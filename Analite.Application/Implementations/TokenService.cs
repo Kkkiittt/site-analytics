@@ -1,8 +1,10 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text;
 
 using Analite.Application.Interfaces;
 using Analite.Domain.Entities;
+using Analite.Domain.Exceptions;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -28,7 +30,7 @@ public class TokenService : ITokenService
 			new Claim(ClaimTypes.Sid, entity.SecurityStamp)
 		};
 
-		SymmetricSecurityKey key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_conf["Key"] ?? Guid.NewGuid().ToString()));
+		SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_conf["Key"] ?? throw new Exception("No Jwt Key!!!")));
 
 		SigningCredentials creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
@@ -43,5 +45,38 @@ public class TokenService : ITokenService
 		JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
 
 		return handler.WriteToken(token);
+	}
+
+	public Guid GetId(string token)
+	{
+		JwtSecurityToken tk = new JwtSecurityToken(token);
+		return Guid.Parse(tk.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? throw new UnauthorizedException("Id in token"));
+	}
+
+	public string GetStamp(string token)
+	{
+		JwtSecurityToken tk = new JwtSecurityToken(token);
+		return tk.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid)?.Value ?? throw new UnauthorizedException("Security stamp in token");
+	}
+
+	public void ValidateToken(string token)
+	{
+		JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
+		var validation = new TokenValidationParameters
+		{
+			ValidateIssuer = true,
+			ValidateAudience = false,
+			IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_conf["Key"] ?? throw new Exception("No Jwt key!!!"))),
+			ValidateIssuerSigningKey = true,
+			ValidateLifetime = false
+		};
+		try
+		{
+			handler.ValidateToken(token, validation, out _);
+		}
+		catch
+		{
+			throw new UnauthorizedException("Token");
+		}
 	}
 }

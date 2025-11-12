@@ -7,6 +7,9 @@ public interface ICustomerService
 {
 	Task<CustomerGetDto> RegisterCustomerAsync(CustomerCreateDto customerCreateDto);
 	Task<string> LoginCustomerAsync(string email, string password);
+
+	Task<string> RefreshTokenAsync(string token);
+
 	Task<CustomerGetDto> GetById(Guid customerId);
 
 

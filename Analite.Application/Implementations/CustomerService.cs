@@ -66,6 +66,17 @@ public class CustomerService : ICustomerService
 		return _tk.GenerateToken(entity);
 	}
 
+	public async Task<string> RefreshTokenAsync(string token)
+	{
+		_tk.ValidateToken(token);//may throw exception
+		Guid id = _tk.GetId(token);
+		Customer entity = await _db.Customers.FindAsync(id) ?? throw new NotFoundException("Customer");
+		string stamp = _tk.GetStamp(token);
+		if(stamp != entity.SecurityStamp)
+			throw new UnauthorizedException("Credentials change");
+		return _tk.GenerateToken(entity);
+	}
+
 	public async Task<CustomerGetDto> RegisterCustomerAsync(CustomerCreateDto dto)
 	{
 		Customer entity = new Customer
