@@ -10,7 +10,7 @@
   <component name="ChangeListManager">
     <list default="true" id="af0e24d4-d171-4ab6-b6f6-9c8277eb1670" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Analite/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Analite/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Analite.Application/Implementations/PageService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Analite.Application/Implementations/PageService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Analite.Application/Implementations/ResultService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Analite.Application/Implementations/ResultService.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
