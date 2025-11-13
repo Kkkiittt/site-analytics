@@ -11,6 +11,7 @@ using Analite.Infrastructure.EFCore;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Logging;
 
 namespace Analite.Application.Implementations;
 
@@ -18,15 +19,24 @@ public class EventService : IEventService
 {
 	private readonly AppDbContext _db;
 	private readonly IDistributedCache _cache;
+	private readonly ILogger<EventService> _log;
 
-	public EventService(AppDbContext db, IDistributedCache cache)
+
+	public EventService(AppDbContext db, IDistributedCache cache,  ILogger<EventService> log)
 	{
 		_db = db;
 		_cache = cache;
+		_log = log;
 	}
 
 	public async Task CollectAsync(EventCreateDto dto)
 	{
+		_log.LogDebug("Event received: Session {SessionId}, CustomerKey {CustomerKey}, Block {BlockName}, OccuredAt {OccuredAt}",
+			dto.SessionId,
+			dto.CustomerKey,
+			dto.BlockName,
+			dto.OccuredAt);
+		
 		Customer? customer = await _db.Customers.FirstOrDefaultAsync(c => c.PublicKey == dto.CustomerKey);
 		if(customer == null)
 		{
@@ -49,6 +59,13 @@ public class EventService : IEventService
 		};
 		_db.Events.Add(entity);
 		await _db.SaveChangesAsync();
+		
+		_log.LogInformation("Event stored successfully: Session {SessionId}, CustomerId {CustomerId}, Block {BlockId}, PageId {PageId}",
+			entity.SessionId,
+			entity.CustomerId,
+			entity.BlockId,
+			entity.PageId);
+		
 		try
 		{
 			await AddToCacheAsync(entity);
@@ -56,11 +73,16 @@ public class EventService : IEventService
 		catch(Exception ex)
 		{
 			//its okay, log or sth
+			//_log.LogError(ex, "Error adding event to event cache");
 		}
 	}
 
 	private async Task AddToCacheAsync(Event entity)
 	{
+		_log.LogDebug("Adding event {SessionId} for customer {CustomerId} to cache",
+			entity.SessionId,
+			entity.CustomerId);
+		
 		string key = entity.CustomerId.ToString();
 		List<FlowGetDto> existing = JsonSerializer.Deserialize<List<FlowGetDto>>(await _cache.GetStringAsync(key) ?? "[]") ?? [];
 
@@ -108,5 +130,9 @@ public class EventService : IEventService
 		{
 			SlidingExpiration = TimeSpan.FromMinutes(5)
 		});
+		
+		_log.LogInformation("Cache updated for customer {CustomerId}. Total flows cached: {FlowCount}",
+			entity.CustomerId,
+			existing.Count);
 	}
 }
