@@ -131,8 +131,9 @@ public class AdminService : IAdminService
 
 	public async Task PromoteCustomerAsync(Guid customerId)
 	{
-		_log.LogInformation("[{Time}] User {AdminId} ({Email}) promotes customer {CustomerId} to the Admin role",
+		_log.LogInformation("[{Time}] User {AdminId} promotes customer {CustomerId} to the Admin role",
 			DateTime.UtcNow,
+			customerId,
 			_id.Id);
 		
 		Customer entity = await _db.Customers.FindAsync(customerId) ?? throw new NotFoundException("Customer");
@@ -149,8 +150,8 @@ public class AdminService : IAdminService
 	{
 		_log.LogInformation("[{Time}] Admin {AdminId} ({Email}) unblocks user {CustomerId}",
 			DateTime.UtcNow,
-			_id.Id,
-			customerId);
+			customerId,
+			_id.Id);
 		
 		Customer entity = await _db.Customers.FindAsync(customerId) ?? throw new NotFoundException("Customer");
 		entity.IsActive = true;
