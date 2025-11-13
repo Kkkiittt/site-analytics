@@ -16,6 +16,7 @@ public class AdminService : IAdminService
 	private readonly AppDbContext _db;
 	private readonly IIdentityService _id;
 	private readonly ILogger<AdminService> _log;
+	
 
 	public AdminService(AppDbContext db, IIdentityService id, ILogger<AdminService> log)
 	{
@@ -23,11 +24,24 @@ public class AdminService : IAdminService
 		_id = id;
 		_log = log;
 	}
+	
+	private void EnsureAdmin()
+	{
+		if (_id.Role != Roles.Admin && _id.Role != Roles.SuperAdmin)
+		{
+			_log.LogWarning("Access denied. User {UserId} with role {Role} attempted admin action.", 
+				_id.Id, 
+				_id.Role);
+			throw new NoAccessException("Admin permission required");
+		}
+	}
 
 	public async Task ApproveCustomerAsync(Guid customerId)
 	{
-		_log.LogInformation("Attempt to approve {CustomerId} by  {AdminId} Admin", customerId, _id.Id);
-
+		EnsureAdmin();
+		_log.LogInformation("Admin {AdminId} attempts to approve customer {CustomerId}",
+			_id.Id, 
+			customerId);
 		Customer entity = await _db.Customers.FindAsync(customerId) ?? throw new NotFoundException("Customer");
 		entity.IsApproved = true;
 		await _db.SaveChangesAsync();
@@ -37,7 +51,10 @@ public class AdminService : IAdminService
 
 	public async Task BlockCustomerAsync(Guid customerId)
 	{
-		_log.LogWarning("Admin {AdminId} trying to block customer {CustomerId}", _id.Id, customerId);
+		EnsureAdmin();
+		_log.LogWarning("Admin {AdminId} trying to block customer {CustomerId}",
+			_id.Id, 
+			customerId);
 
 		Customer entity = await _db.Customers.FindAsync(customerId) ?? throw new NotFoundException("Customer");
 		if(entity.Role == Roles.Admin && _id.Role != Roles.SuperAdmin)
@@ -54,59 +71,53 @@ public class AdminService : IAdminService
 
 	public async Task<ManyDto<CustomerGetFullDto>> GetAllCustomersAsync(PaginationData pagination)
 	{
-		_log.LogWarning("HELLO WORLD!!!!!!!");
-		_log.LogDebug(
-			$"[{DateTime.UtcNow}] User {_id.Id} requests list of customers. Page: {pagination.Page}, PageSize: {pagination.PageSize}");
+		EnsureAdmin();
+		_log.LogDebug("User {AdminId}  requests list of customers. Page: {Page}, PageSize: {PageSize}",
+			_id.Id,
+			pagination.Page,
+			pagination.PageSize);
 
-		try
-		{
-			var entities = await _db.Customers.OrderByDescending(c => c.CreatedAt)
-				.Skip((pagination.Page - 1) * pagination.PageSize)
-				.Take(pagination.PageSize)
-				.Select(c => new CustomerGetFullDto
-				{
-					Id = c.Id,
-					PublicKey = c.PublicKey,
-					Name = c.Name,
-					Surname = c.Surname,
-					Email = c.Email,
-					Role = c.Role,
-					CreatedAt = c.CreatedAt,
-					SecurityStamp = c.SecurityStamp,
-					IsActive = c.IsActive,
-					IsApproved = c.IsApproved,
-					UpdatedAt = c.UpdatedAt
-				})
-				.ToListAsync();
-			return new ManyDto<CustomerGetFullDto>
+		var entities = await _db.Customers.OrderByDescending(c => c.CreatedAt)
+			.Skip((pagination.Page - 1) * pagination.PageSize)
+			.Take(pagination.PageSize)
+			.Select(c => new CustomerGetFullDto
 			{
-				Total = await _db.Customers.CountAsync(),
-				Items = entities,
-				Pagination = pagination
-			};
-		}
-		catch(Exception ex)
+				Id = c.Id,
+				PublicKey = c.PublicKey,
+				Name = c.Name,
+				Surname = c.Surname,
+				Email = c.Email,
+				Role = c.Role,
+				CreatedAt = c.CreatedAt,
+				SecurityStamp = c.SecurityStamp,
+				IsActive = c.IsActive,
+				IsApproved = c.IsApproved,
+				UpdatedAt = c.UpdatedAt
+			})
+			.ToListAsync();
+		
+		_log.LogInformation("Admin {AdminId} retrieved customer list: {Count} items",
+			_id.Id, 
+			entities.Count);
+		
+		return new ManyDto<CustomerGetFullDto>
 		{
-			_log.LogError(ex,
-				"[{Time}] An error while getting customer list. User: {AdminId} ({Email}), Page: {Page}",
-				DateTime.UtcNow,
-				_id.Id,
-				pagination.Page);
-			throw;
-		}
+			Total = await _db.Customers.CountAsync(),
+			Items = entities,
+			Pagination = pagination
+		};
 
 	}
 
 	public async Task<CustomerGetFullDto> GetByIdAsync(Guid customerId)
 	{
-		_log.LogDebug("[{Time}] Search for a client {CustomerId} by an Admin {AdminId} ({Email})",
-			DateTime.UtcNow,
+		EnsureAdmin();
+		_log.LogDebug("Search for a client {CustomerId} by an Admin {AdminId})",
 			customerId,
 			_id.Id);
 		Customer entity = await _db.Customers.FindAsync(customerId) ?? throw new NotFoundException("Customer");
 
-		_log.LogInformation("[{Time}] Customer {CustomerId} found by {AdminId}",
-			DateTime.UtcNow,
+		_log.LogInformation("Customer {CustomerId} found by {AdminId}",
 			customerId,
 			_id.Id);
 
@@ -128,24 +139,24 @@ public class AdminService : IAdminService
 
 	public async Task PromoteCustomerAsync(Guid customerId)
 	{
-		_log.LogInformation("[{Time}] User {AdminId} ({Email}) promotes customer {CustomerId} to the Admin role",
-			DateTime.UtcNow,
-			_id.Id);
+		EnsureAdmin();
+		_log.LogInformation("User {AdminId}  promotes customer {CustomerId} to the Admin role",
+			_id.Id,
+			customerId);
 
 		Customer entity = await _db.Customers.FindAsync(customerId) ?? throw new NotFoundException("Customer");
 		entity.Role = Roles.Admin;
 		await _db.SaveChangesAsync();
 
-		_log.LogInformation("[{Time}] User {CustomerId} successfully promoted to the Admin role by user {AdminId}",
-			DateTime.UtcNow,
+		_log.LogInformation("User {CustomerId} successfully promoted to the Admin role by user {AdminId}",
 			customerId,
 			_id.Id);
 	}
 
 	public async Task UnblockCustomerAsync(Guid customerId)
 	{
-		_log.LogInformation("[{Time}] Admin {AdminId} ({Email}) unblocks user {CustomerId}",
-			DateTime.UtcNow,
+		EnsureAdmin();
+		_log.LogInformation("Admin {AdminId} unblocks user {CustomerId}",
 			_id.Id,
 			customerId);
 
@@ -153,8 +164,7 @@ public class AdminService : IAdminService
 		entity.IsActive = true;
 		await _db.SaveChangesAsync();
 
-		_log.LogInformation("[{Time}] User {CustomerId} unblocked by Admin {AdminId}",
-			DateTime.UtcNow,
+		_log.LogInformation("User {CustomerId} unblocked by Admin {AdminId}",
 			customerId,
 			_id.Id);
 	}

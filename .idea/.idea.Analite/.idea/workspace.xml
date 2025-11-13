@@ -9,15 +9,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="af0e24d4-d171-4ab6-b6f6-9c8277eb1670" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Analite/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Analite/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Analite.Api/Analite.Api.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Analite.Api/Analite.Api.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Analite.Api/Middlewares/ExceptionMiddleware.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Analite.Api/Middlewares/ExceptionMiddleware.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Analite.Api/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Analite.Api/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Analite.Api/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/Analite.Api/appsettings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Analite.Application/Analite.Application.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Analite.Application/Analite.Application.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Analite.Application/Implementations/AdminService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Analite.Application/Implementations/AdminService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Analite.Domain/Analite.Domain.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Analite.Domain/Analite.Domain.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Analite.Infrastructure/Analite.Infrastructure.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Analite.Infrastructure/Analite.Infrastructure.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Analite.Application/Implementations/BlockService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Analite.Application/Implementations/BlockService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Analite.Application/Implementations/CustomerService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Analite.Application/Implementations/CustomerService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Analite.Application/Implementations/EventService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Analite.Application/Implementations/EventService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Analite.Application/Implementations/FlowService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Analite.Application/Implementations/FlowService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Analite.Application/Implementations/PageService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Analite.Application/Implementations/PageService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Analite.Application/Implementations/ResultService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Analite.Application/Implementations/ResultService.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
